@@ -1,6 +1,7 @@
+//Pansa Intawong 66070503474
+//Before or After Insertion
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 typedef struct node{
     int data;
@@ -25,16 +26,7 @@ void append(node_t **head, int val){
     }
     last->next = new_node;
 }
-bool search(node_t *head, int val){
-    if(head == NULL){
-        return false;
-    }
 
-    if(head->data == val){
-        return true;
-    }
-    return search(head->next, val);
-}
 void insertAfter(node_t **head, int ref_val, int ins_val){
     node_t *new_node = (node_t *)malloc(sizeof(node_t));
     new_node->data = ins_val;
@@ -54,7 +46,29 @@ void insertAfter(node_t **head, int ref_val, int ins_val){
         last = last->next;
     }
     new_node->next = last->next;
+
     last->next = new_node;
+}
+
+void insertBefore(node_t **head, int ref_val, int ins_val){
+    node_t *new_node = (node_t*)malloc(sizeof(node_t));
+    new_node->data = ins_val;
+
+    node_t *temp = *head;
+    node_t *temp2 = NULL;
+
+    if(*head == NULL){
+        *head = new_node;
+        return;
+    }
+
+    while(temp->data != ref_val && temp->next != NULL){
+        temp2 = temp;
+        temp = temp->next;
+    }
+
+    new_node->next = temp;
+    temp->next = new_node;
 }
 
 void printList(node_t *head){
@@ -73,16 +87,33 @@ int main(){
         scanf("%d", &temp);
         append(&head, temp);
     }
+    // printList(head);
     char mode[1];
     int ref_val = 2, ins_val = 4;
     // scanf("%c %d %d", mode, ref_val, ins_val);
-    insertAfter(&head, ref_val, ins_val);
-    printList(head);
+    insertBefore(&head, ref_val, ins_val);
+    // printf("\n");
     // do{
-    //     scanf("%c %d %d", mode, ref_val, ins_val);
-    //     if(mode[0] == 'A'){
-    //         insertAfter(&head, ref_val, ins_val);
+    //     scanf("%c", mode);
+    //     if(mode[0] == 'E'){
+    //         break;
     //     }
-    // }while(mode != 'E');
+    //     scanf("%d %d", &ref_val, &ins_val);
+
+    //     switch (mode[0])
+    //     {
+    //     case 'A':
+    //         insertAfter(&head, ref_val, ins_val);
+    //         break;
+    //     case 'B':
+    //         insertBefore(&head, ref_val, ins_val);
+    //         break;
+    //     case 'E':
+    //         break;
+    //     default:
+    //         break;
+    //     }
+    // }while(mode[0] != 'E');
+    printList(head);
     return 0;
 }
