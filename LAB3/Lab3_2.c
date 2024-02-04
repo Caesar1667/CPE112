@@ -84,6 +84,14 @@ void printList(node_t *head){
     }
 }
 
+void freeList(node_t *head) {
+    while (head != NULL) {
+        node_t *temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
 int main(){
     int size;
     scanf("%d", &size);
@@ -97,7 +105,7 @@ int main(){
         append(&head, temp);
     }
     // printList(head);
-    char mode[1];
+    char mode[2];
     int ref_val = 2, ins_val = 4;
     // scanf("%c %d %d", mode, ref_val, ins_val);
     // insertBefore(&head, ref_val, ins_val);
@@ -119,10 +127,9 @@ int main(){
             break;
         case 'E':
             break;
-        default:
-            break;
         }
     }while(mode[0] != 'E');
     printList(head);
+    freeList(head);
     return 0;
 }

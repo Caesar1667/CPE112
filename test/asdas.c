@@ -1,105 +1,135 @@
-// Simple C code to delete node at particular position
-
 #include <stdio.h>
-#include <stdlib.h>
+#include<stdlib.h>
+// Define the structure for a linked list node
+typedef struct node {
+    int data;
+    struct node* next;
+} node;
+void insert_back(node** start, int data) {
+    node* newnode, *ptr;
+    newnode = (node*)malloc(sizeof(node));
+    newnode->data = data;
+    newnode->next = NULL;
 
-void insert(int);
-void display_List();
-void delete (int);
+    if (*start == NULL) {
+        // If the list is empty, the new node becomes the start
+        *start = newnode;
+    } else {
+        // Traverse to the end of the list and add the new node
+        ptr = *start;
+        while (ptr->next != NULL) {
+            ptr = ptr->next;
+        }
+        ptr->next = newnode;
+    }
+}
+void deletefirst(node** start){
+  node* ptr;
+  if(*start==NULL){
+    return;
+  }
+  ptr=*start;
+  *start=(*start)->next;
+  free(ptr);
+}
+void deletelast(node** start){
+  node* ptr,*prev;
+  if(*start == NULL){
+    return;
+  }
+  ptr = *start;
+  while(ptr->next != NULL){
+    prev = ptr;
+    ptr = ptr->next;
+  }
+  prev->next = NULL;
+  free(ptr);
+}
+void deletenode(node** start, int value) {
+    if (*start == NULL) {
+        return; // Empty list, nothing to delete
+    }
 
-struct node // Structure declaration
-{
-	int data;
-	struct node* next; // Self referral pointer
-}* head = NULL,
-*tail
-= NULL; // Initial value of Head and Tail pointer is NULL
+    node* ptr, *preptr;
+    ptr = *start;
+    preptr = NULL;
 
-void delete (int pos)
-{
-	struct node* temp = head; // Creating a temporary
-							// variable pointing to head
-	int i;
-	if (pos == 0) {
-		printf("\nElement deleted is : %d\n", temp->data);
-		head = head->next; // Advancing the head pointer
-		temp->next = NULL;
-		free(temp); // Node is deleted
-	}
-	else {
-		for (i = 0; i < pos - 1; i++) {
-			temp = temp->next;
-		}
-		// Now temp pointer points to the previous node of
-		// the node to be deleted
-		struct node* del
-			= temp->next; // del pointer points to the node
-						// to be deleted
-		temp->next = temp->next->next;
-		printf("\nElement deleted is : %d\n", del->data);
-		del->next = NULL;
-		free(del); // Node is deleted
-	}
-	printf("\nUpdated Linked List is : \n");
-	display_List();
-	return;
+    // Search for the node with the specified value
+    while (ptr != NULL && ptr->data != value) {
+        preptr = ptr;
+        ptr = ptr->next;
+    }
+
+    // If the value is not found, do nothing
+    if (ptr == NULL) {
+        return;
+    }
+
+    // If the node to be deleted is the first node
+    if (preptr == NULL) {
+        *start = ptr->next;
+    } else {
+        preptr->next = ptr->next;
+    }
+
+    free(ptr);
 }
 
-void insert(int value)
-{
-	struct node* newnode; // Creating a new node
-	newnode = (struct node*)malloc(
-		sizeof(struct node)); // Allocating dynamic memory
 
-	newnode->data = value; // Assigning value to newnode
-	newnode->next = NULL;
+void freelist(node* start){
+  node* ptr = start;
+  node* tmp;
+  while(ptr != NULL){
+    tmp = ptr->next;
+    free(ptr);
+    ptr = tmp;
+  }
+}
+int main(void) {
+  node* start = NULL;
+  int numofnode, data, value;
+  char choice;
 
-	if (head == NULL) // Checking if List is empty
-	{
-		head = newnode;
-		tail = newnode;
-	}
-	else // If not empty then...
-	{
-		tail->next = newnode;
-		tail = newnode; // Updating the tail node with each
-						// insertion
-	}
-	return;
+  // Read the number of nodes and their values
+  scanf(" %d", &numofnode);
+  for (int i = 0; i < numofnode; i++) {
+      scanf(" %d", &data);
+      insert_back(&start, data);
+  }
+  scanf(" %c", &choice);
+// ...
+
+while (1) {
+    if (choice == 'F') {
+        deletefirst(&start);
+    } else if (choice == 'L') {
+        deletelast(&start);
+    } else if (choice == 'N') {
+        scanf(" %d", &value);
+        if (value >= 1) {
+            deletenode(&start, value);
+        }
+    } else if (choice == 'E') {
+        break;
+    } else {
+        continue;
+    }
+
+    // Read the next choice after performing the current operation
+    scanf(" %c", &choice);
 }
 
-void display_List()
-{
-	struct node* temp; // Creating a temporary pointer to
-					// the structure
-	temp = head; // temp points to head;
-	while (temp != NULL) {
-		if (temp->next == NULL) {
-			printf(" %d->NULL", temp->data);
-		}
-		else {
-			printf(" %d->", temp->data);
-		}
-		temp = temp->next; // Traversing the List till end
-	}
-	printf("\n");
-	return;
+if (start == NULL) {
+    printf("none\n");
+} else {
+    // Print the remaining nodes
+    node* last = start;
+    while (last != NULL) {
+        printf("%d ", last->data);
+        last = last->next;
+    }
 }
-// --Driver Code--
-int main()
-{
-	insert(10);
-	insert(20);
-	insert(30);
-	insert(40);
-	insert(50);
-	insert(60);
-	printf("\n--Created Linked List--\n");
-	display_List();
-	printf("\nLinked List after deletion at position 0");
-	delete (5); // List indexing starts from 0
-	printf("\nLinked List after deletion at position 2");
-	delete (2);
-	return 0;
+
+freelist(start);
+return 0;
 }
-// This code is contributed by Sanjeeban Mukhopadhyay.
