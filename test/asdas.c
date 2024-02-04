@@ -1,3 +1,5 @@
+// 66070503421 Nutthawut Jaroenchokwittaya
+// Delete first last or same value node and print remaining
 #include <stdio.h>
 #include<stdlib.h>
 // Define the structure for a linked list node
@@ -33,17 +35,20 @@ void deletefirst(node** start){
   free(ptr);
 }
 void deletelast(node** start){
-  node* ptr,*prev;
+  node* ptr,*pre;
   if(*start == NULL){
     return;
   }
   ptr = *start;
   while(ptr->next != NULL){
-    prev = ptr;
+    pre = ptr;
     ptr = ptr->next;
   }
-  prev->next = NULL;
-  free(ptr);
+  if(pre == NULL){ //prev has one node
+      *start = NULL;
+  }else{ //prev has more than one
+      pre->next = NULL;
+  }
 }
 void deletenode(node** start, int value) {
     if (*start == NULL) {
@@ -119,16 +124,18 @@ while (1) {
     scanf(" %c", &choice);
 }
 
-if (start == NULL) {
-    printf("none\n");
-} else {
+
     // Print the remaining nodes
     node* last = start;
+  if(start != NULL){
     while (last != NULL) {
         printf("%d ", last->data);
         last = last->next;
+
     }
-}
+  }else{
+    printf("none");
+  }
 
 freelist(start);
 return 0;
