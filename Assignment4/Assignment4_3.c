@@ -2,21 +2,21 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct stack {
+typedef struct stack{
     char data;
     struct stack *next;
-} stacks;
+}stacks;
 
-void push(stacks **stack, char val) {
-    stacks *new_stack = (stacks *)malloc(sizeof(stacks));
+void push(stacks **stack, char val){
+    stacks *new_stack = (stacks*)malloc(sizeof(stacks));
 
     new_stack->data = val;
     new_stack->next = *stack;
     *stack = new_stack;
 }
 
-void pop(stacks **stack) {
-    if (*stack == NULL) {
+void pop(stacks **stack){
+    if(*stack == NULL){
         return;
     }
     stacks *temp = *stack;
@@ -24,22 +24,22 @@ void pop(stacks **stack) {
     free(temp);
 }
 
-void display(stacks *stack) {
-    while (stack != NULL) {
+void display(stacks *stack){
+    while(stack != NULL){
         printf("%c", stack->data);
         stack = stack->next;
     }
 }
 
-void displayTop(stacks *stack) {
-    if (stack == NULL) {
+void displayTop(stacks *stack){
+    if(stack == NULL){
         printf("empty\n");
-    } else {
+    }else{
         printf("%c\n", stack->data);
     }
 }
 
-bool balanceCheck(stacks **stack) {
+bool balanceCheck(stacks **stack){
     stacks *current = *stack;
 
     while (current != NULL) {
@@ -76,58 +76,65 @@ bool balanceCheck(stacks **stack) {
     return true;
 }
 
-void parenthesis(stacks **stack) {
-    stacks *current = *stack, *prev = NULL, *topStack = NULL;
+void reverse(stacks **stack){
+    stacks *prev = NULL;
+    stacks *current = *stack;
+    stacks *next = NULL;
+    while(current != NULL){
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    *stack = prev;
+}
 
-    while (current != NULL) {
-        if (current->data == ']' || current->data == '}' || current->data == ')') {
-            if (prev != NULL) {
-                prev->next = current->next;
-            } else {
-                *stack = current->next;
-            }
-            current->next = topStack;
-            topStack = current;
-            current = (prev != NULL) ? prev->next : *stack;
-        } else {
+void parenthesis(stacks **stack){
+    stacks *current = *stack, *prev = NULL, *topStack = NULL;
+    while(current != NULL){
+        if(current->data == ']' || current->data == '}' || current->data == ')'){
+                if(prev != NULL){
+                    prev->next = current->next;
+                }else{
+                    *stack = current->next;
+                }
+                current->next = topStack;
+                topStack = current;
+                current = (prev != NULL) ? prev->next : *stack;
+        }else{
             prev = current;
             current = current->next;
         }
     }
-
-    if (prev != NULL) {
+    if(prev != NULL){
         prev->next = topStack;
-    } else {
+    }else{
         *stack = topStack;
     }
 }
 
-int main() {
+
+int main(){
     stacks *stack = NULL;
     char INPUT;
-    
-    printf("Enter a string: ");
-    while ((INPUT = getchar()) != '\n' && INPUT != EOF) {
+    while((INPUT = getchar()) != '\n' && INPUT != EOF){
         push(&stack, INPUT);
     }
-
-    printf("Original string: ");
     display(stack);
     printf("\n");
     displayTop(stack);
-
+    reverse(&stack);
+    display(stack);
+    printf("\n");
+    displayTop(stack);
     parenthesis(&stack);
-
-    printf("String after moving parentheses to the top: ");
     display(stack);
     printf("\n");
     displayTop(stack);
-
-    if (balanceCheck(&stack)) {
-        printf("The string is balanced.\n");
-    } else {
-        printf("The string is not balanced.\n");
+    if(balanceCheck(&stack)){
+        printf("The string is balanced");
+    }else{
+        printf("The string is not balanced");
     }
-
     return 0;
 }
