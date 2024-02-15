@@ -1,140 +1,92 @@
+//Pansa Intawong 66070503474
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 
-typedef struct stack{
-    char data;
-    struct stack *next;
-}stacks;
+#define MAX 100
 
-void push(stacks **stack, char val){
-    stacks *new_stack = (stacks*)malloc(sizeof(stacks));
+char stack[MAX];
+int top = -1;
 
-    new_stack->data = val;
-    new_stack->next = *stack;
-    *stack = new_stack;
-}
-
-void pop(stacks **stack){
-    if(*stack == NULL){
+void push(char *stack,char val, int top){
+    if(top == MAX - 1){
+        printf("Stack Overflow.");
         return;
     }
-    stacks *temp = *stack;
-    *stack = (*stack)->next;
-    free(temp);
+
+    stack[++top] = val;
 }
 
-void display(stacks *stack){
-    while(stack != NULL){
-        printf("%c", stack->data);
-        stack = stack->next;
-    }
+int empty(){
+    return top == -1;
 }
 
-void displayTop(stacks *stack){
-    if(stack == NULL){
-        printf("empty\n");
+char pop(char *stack, int top){
+    if(top == -1){
+        printf("Stack Underflow.");
+        return '\0';
     }else{
-        printf("%c\n", stack->data);
+        return stack[top--];
     }
 }
 
-bool balanceCheck(stacks **stack){
-    stacks *current = *stack;
+void display(){
+    if(top == -1){
+        printf("Stack is empty.");
+        return;
+    }
 
-    while (current != NULL) {
-        if (current->data == ')' || current->data == ']' || current->data == '}') {
-            switch (current->data) {
-                case ')':
-                    if (*stack != NULL && (*stack)->data == '(') {
-                        (*stack) = (*stack)->next;
-                    } else {
-                        return false;
-                    }
-                    break;
-                case '}':
-                    if (*stack != NULL && (*stack)->data == '{') {
-                        (*stack) = (*stack)->next;
-                    } else {
-                        return false;
-                    }
-                    break;
-                case ']':
-                    if (*stack != NULL && (*stack)->data == '[') {
-                        (*stack) = (*stack)->next;
-                    } else {
-                        return false;
-                    }
-                    break;
-                default:
-                    break;
+    for(int i = top; i > -1; i--){
+        printf("%c", stack[i]);
+    }
+}
+
+void reverse(){
+    int i = top;
+    int last = 0;
+    while(last < i){
+        char temp = stack[last];
+        stack[last] = stack[i];
+        stack[i] = temp;
+        last++;
+        i--;
+    }
+}
+
+int ParenthesesCheck(char * stack){
+    int temptop = -1;
+    char tempstack[MAX];
+    for(int i = 0; i < top; ++i){
+        if(stack[i] == '(' || stack[i] == '{' || stack[i] == '['){
+            push(tempstack, stack[i], temptop);
+        }else if(stack[i] == ')' || stack[i] == '}' || stack[i] == ']'){
+            if(temptop == -1){
+                return 0;
+            }
+
+            char topStack = pop(tempstack, temptop);
+
+            if ((topStack == '(' && stack[i] != ')') ||
+                (topStack == '{' && stack[i] != '}') ||
+                (topStack == '[' && stack[i] != ']')) {
+                return 0;
             }
         }
-        current = current->next;
     }
-
-    return true;
+    return (temptop == -1);
 }
-
-void reverse(stacks **stack){
-    stacks *prev = NULL;
-    stacks *current = *stack;
-    stacks *next = NULL;
-    while(current != NULL){
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
-    }
-    *stack = prev;
-}
-
-void parenthesis(stacks **stack){
-    stacks *current = *stack, *prev = NULL, *topStack = NULL;
-    while(current != NULL){
-        if(current->data == ']' || current->data == '}' || current->data == ')'){
-                if(prev != NULL){
-                    prev->next = current->next;
-                }else{
-                    *stack = current->next;
-                }
-                current->next = topStack;
-                topStack = current;
-                current = (prev != NULL) ? prev->next : *stack;
-        }else{
-            prev = current;
-            current = current->next;
-        }
-    }
-    if(prev != NULL){
-        prev->next = topStack;
-    }else{
-        *stack = topStack;
-    }
-}
-
 
 int main(){
-    stacks *stack = NULL;
     char INPUT;
     while((INPUT = getchar()) != '\n' && INPUT != EOF){
-        push(&stack, INPUT);
+        push(stack, INPUT, top);
     }
-    display(stack);
-    printf("\n");
-    displayTop(stack);
-    reverse(&stack);
-    display(stack);
-    printf("\n");
-    displayTop(stack);
-    parenthesis(&stack);
-    display(stack);
-    printf("\n");
-    displayTop(stack);
-    if(balanceCheck(&stack)){
+
+    if(ParenthesesCheck(stack)){
         printf("The string is balanced");
     }else{
         printf("The string is not balanced");
     }
+    
     return 0;
 }
