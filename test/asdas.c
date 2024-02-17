@@ -1,133 +1,89 @@
+// A C program to demonstrate linked list based
+// implementation of queue
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
-typedef struct stack {
-    char data;
-    struct stack *next;
-} stacks;
+// A linked list (LL) node to store a queue entry
+struct QNode {
+	int key;
+	struct QNode* next;
+};
 
-void push(stacks **stack, char val) {
-    stacks *new_stack = (stacks *)malloc(sizeof(stacks));
+// The queue, front stores the front node of LL and rear
+// stores the last node of LL
+struct Queue {
+	struct QNode *front, *rear;
+};
 
-    new_stack->data = val;
-    new_stack->next = *stack;
-    *stack = new_stack;
+// A utility function to create a new linked list node.
+struct QNode* newNode(int k)
+{
+	struct QNode* temp
+		= (struct QNode*)malloc(sizeof(struct QNode));
+	temp->key = k;
+	temp->next = NULL;
+	return temp;
 }
 
-void pop(stacks **stack) {
-    if (*stack == NULL) {
-        return;
-    }
-    stacks *temp = *stack;
-    *stack = (*stack)->next;
-    free(temp);
+// A utility function to create an empty queue
+struct Queue* createQueue()
+{
+	struct Queue* q
+		= (struct Queue*)malloc(sizeof(struct Queue));
+	q->front = q->rear = NULL;
+	return q;
 }
 
-void display(stacks *stack) {
-    while (stack != NULL) {
-        printf("%c", stack->data);
-        stack = stack->next;
-    }
+// The function to add a key k to q
+void enQueue(struct Queue* q, int k)
+{
+	// Create a new LL node
+	struct QNode* temp = newNode(k);
+
+	// If queue is empty, then new node is front and rear
+	// both
+	if (q->rear == NULL) {
+		q->front = q->rear = temp;
+		return;
+	}
+
+	// Add the new node at the end of queue and change rear
+	q->rear->next = temp;
+	q->rear = temp;
 }
 
-void displayTop(stacks *stack) {
-    if (stack == NULL) {
-        printf("empty\n");
-    } else {
-        printf("%c\n", stack->data);
-    }
+// Function to remove a key from given queue q
+void deQueue(struct Queue* q)
+{
+	// If queue is empty, return NULL.
+	if (q->front == NULL)
+		return;
+
+	// Store previous front and move front one node ahead
+	struct QNode* temp = q->front;
+
+	q->front = q->front->next;
+
+	// If front becomes NULL, then change rear also as NULL
+	if (q->front == NULL)
+		q->rear = NULL;
+
+	free(temp);
 }
 
-bool balanceCheck(stacks **stack) {
-    stacks *current = *stack;
-
-    while (current != NULL) {
-        if (current->data == ')' || current->data == ']' || current->data == '}') {
-            switch (current->data) {
-                case ')':
-                    if (*stack != NULL && (*stack)->data == '(') {
-                        (*stack) = (*stack)->next;
-                    } else {
-                        return false;
-                    }
-                    break;
-                case '}':
-                    if (*stack != NULL && (*stack)->data == '{') {
-                        (*stack) = (*stack)->next;
-                    } else {
-                        return false;
-                    }
-                    break;
-                case ']':
-                    if (*stack != NULL && (*stack)->data == '[') {
-                        (*stack) = (*stack)->next;
-                    } else {
-                        return false;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        current = current->next;
-    }
-
-    return true;
-}
-
-void parenthesis(stacks **stack) {
-    stacks *current = *stack, *prev = NULL, *topStack = NULL;
-
-    while (current != NULL) {
-        if (current->data == ']' || current->data == '}' || current->data == ')') {
-            if (prev != NULL) {
-                prev->next = current->next;
-            } else {
-                *stack = current->next;
-            }
-            current->next = topStack;
-            topStack = current;
-            current = (prev != NULL) ? prev->next : *stack;
-        } else {
-            prev = current;
-            current = current->next;
-        }
-    }
-
-    if (prev != NULL) {
-        prev->next = topStack;
-    } else {
-        *stack = topStack;
-    }
-}
-
-int main() {
-    stacks *stack = NULL;
-    char INPUT;
-    
-    printf("Enter a string: ");
-    while ((INPUT = getchar()) != '\n' && INPUT != EOF) {
-        push(&stack, INPUT);
-    }
-
-    printf("Original string: ");
-    display(stack);
-    printf("\n");
-    displayTop(stack);
-
-    parenthesis(&stack);
-
-    printf("String after moving parentheses to the top: ");
-    display(stack);
-    printf("\n");
-    displayTop(stack);
-
-    if (balanceCheck(&stack)) {
-        printf("The string is balanced.\n");
-    } else {
-        printf("The string is not balanced.\n");
-    }
-
-    return 0;
+// Driver code
+int main()
+{
+	struct Queue* q = createQueue();
+	enQueue(q, 10);
+	enQueue(q, 20);
+	deQueue(q);
+	deQueue(q);
+	enQueue(q, 30);
+	enQueue(q, 40);
+	enQueue(q, 50);
+	deQueue(q);
+	printf("Queue Front : %d \n", ((q->front != NULL) ? (q->front)->key : -1));
+	printf("Queue Rear : %d", ((q->rear != NULL) ? (q->rear)->key : -1));
+	return 0;
 }
