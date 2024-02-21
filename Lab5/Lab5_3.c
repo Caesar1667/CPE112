@@ -19,7 +19,7 @@ int main(){
     pq.arr[strcspn(pq.arr, "\n")] = '\0';
     int length = strlen(pq.arr);
     int i = 0, j = 0, low = 0, mid = 0, high = 0;
-    while(i < length){
+    for(i = 0; i < length; i++){
         if (((pq.arr[i] >= 'B' && pq.arr[i] <= 'Z') && pq.arr[i] != 'E' && pq.arr[i] != 'I' && pq.arr[i] != 'O' && pq.arr[i] != 'U') || 
             ((pq.arr[i] >= 'b' && pq.arr[i] <= 'z') && pq.arr[i] != 'e' && pq.arr[i] != 'i' && pq.arr[i] != 'o' && pq.arr[i] != 'u')){
                 pq.Prioritised[0][low] = pq.arr[i];
@@ -32,23 +32,18 @@ int main(){
                 pq.Prioritised[1][mid] = pq.arr[i];
                 mid++;
         }
-        i++;
     }
     // printf("%c ", pq.Prioritised[0][1]);
-    low = mid = high = 0;
-    while(pq.Prioritised[2][high] != '\0'){
-        printf("%c", pq.Prioritised[2][high]);
-        high++;
+    for (int i = 0; i < high; i++) {
+        printf("%c", pq.Prioritised[2][i]);
     }
 
-    while(pq.Prioritised[1][mid] != '\0'){
-        printf("%c", pq.Prioritised[1][mid]);
-        mid++;
+    for (int i = 0; i < mid; i++) {
+        printf("%c", pq.Prioritised[1][i]);
     }
-    
-    while(pq.Prioritised[0][low] != '\0'){
-        printf("%c", pq.Prioritised[0][low]);
-        low++;
+
+    for (int i = 0; i < low; i++) {
+        printf("%c", pq.Prioritised[0][i]);
     }
     return 0;
 }
@@ -65,3 +60,5 @@ int main(){
 //         printf("%s ", arr[i]);
 //     }
 // }
+
+// IiouaaoouoeiEAIAIOo           ^^wshyllgdlcknthFrstXMNTN
