@@ -15,7 +15,7 @@ void push(stacks **stack, int val){
     }
     stacks *new_stacks = (stacks*)malloc(sizeof(stacks));
 
-    new_stacks->data = val;
+    new_stacks->data = val; 
     new_stacks->next = *stack;
     *stack = new_stacks;
 }
