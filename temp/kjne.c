@@ -65,3 +65,8 @@ int main(){
 //         printf("%s ", arr[i]);
 //     }
 // }
+
+Q *q = NULL;
+
+push(Q **q , data, prio)
+    prio > (*q)->prio ? ()
