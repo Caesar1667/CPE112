@@ -51,7 +51,7 @@ void push(Node** head, int d, int p)
 	// Special Case: The head of list has lesser 
 	// priority than new node. So insert new 
 	// node before head node and change head node. 
-	if ((*head)->priority > p) { 
+	if ((*head)->priority < p) { 
 
 		// Insert New Node before head 
 		temp->next = *head; 
@@ -62,7 +62,7 @@ void push(Node** head, int d, int p)
 		// Traverse the list and find a 
 		// position to insert new node 
 		while (start->next != NULL && 
-			start->next->priority < p) { 
+			start->next->priority > p) { 
 			start = start->next; 
 		} 
 
