@@ -60,7 +60,7 @@ BTree *RotateRight(BTree *tree){
     tree->left = temp2;
 
 //update height accodingly and return
-    tree->height = max(height(tree->left), height(tree->right) + 1);    
+    tree->height = max(height(tree->left), height(tree->right) + 1);
     temp1->height = max(height(temp1->left), height(temp1->right) + 1);
 
     return temp1;
@@ -139,7 +139,8 @@ BTree *delete(BTree *tree, int data){
     }else if(data > tree->data){
         tree->right = delete(tree->right, data);
     }else{
-        if((tree->left == NULL) || (tree->right == NULL)){
+
+        if(tree->left == NULL || tree->right == NULL){
             BTree *temp = tree->left ? tree->left : tree->right;
 
             if(temp == NULL){
@@ -147,10 +148,11 @@ BTree *delete(BTree *tree, int data){
                 tree = NULL;
             }else{
                 *tree = *temp;
-                free(temp);
             }
+            free(temp);
         }else{
             BTree *temp = minValue(tree->right);
+
             tree->data = temp->data;
 
             tree->right = delete(tree->right, temp->data);
@@ -177,9 +179,9 @@ BTree *delete(BTree *tree, int data){
     if(balance < -1 && isBalanced(tree->right) <= 0){
         return RotateLeft(tree);
     }
-    
+
     if(balance < -1 && isBalanced(tree->right) > 0){
-        tree->left = RotateRight(tree->right);
+        tree->right = RotateRight(tree->right);
         return RotateLeft(tree);
     }
 
