@@ -123,7 +123,7 @@ BTree *minValue(BTree *tree){
     BTree *current = tree;
 
     while(current->left != NULL){
-        current = current->left;
+        current = minValue(current->left);
     }
     return current;
 }
