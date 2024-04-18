@@ -48,10 +48,8 @@ void insert(heap *h, int value){
     int i = h->size++;
     h->arr[i] = value;
 
-    while(i != 0 && h->arr[(i - 1) / 2] > h->arr[i]){
-        swap(&h->arr[i], &h->arr[(i - 1) / 2]);
-
-        i = (i - 1) / 2;
+    for(int i = h->size / 2 - 1; i >= 0; i--){
+        heapify(h, i);
     }
 }
 
