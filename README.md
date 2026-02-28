@@ -5,8 +5,6 @@
 ---
 ## Contacts<br>
 Email : [pansa.inta@kmutt.ac.th](pansa.inta@kmutt.ac.th)<br>
-Instagram : [arm.pansa](https://www.instagram.com/arm.pansa/)<br>
-Discord : [caesar1667](https://discordapp.com/users/238880015524036608)<br>
 
 ---
 ## Progress
